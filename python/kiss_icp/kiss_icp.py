@@ -31,14 +31,15 @@ from kiss_icp.voxelization import voxel_down_sample
 
 
 class KissICP:
-    def __init__(self, config: KISSConfig):
+    def __init__(self, config: KISSConfig, map_path: str = ""):
         self.last_pose = np.eye(4)
         self.last_delta = np.eye(4)
         self.config = config
         self.adaptive_threshold = get_threshold_estimator(self.config)
         self.preprocessor = get_preprocessor(self.config)
         self.registration = get_registration(self.config)
-        self.local_map = get_voxel_hash_map(self.config)
+        self.local_map = get_voxel_hash_map(self.config, map_path)
+        self.updateMap = map_path == ""
 
     def register_frame(self, frame, timestamps):
         # Apply motion compensation
@@ -67,7 +68,7 @@ class KissICP:
 
         # Update step: threshold, local map, delta, and the last pose
         self.adaptive_threshold.update_model_deviation(model_deviation)
-        self.local_map.update(frame_downsample, new_pose)
+        if (self.updateMap): self.local_map.update(frame_downsample, new_pose)
         self.last_delta = np.linalg.inv(self.last_pose) @ new_pose
         self.last_pose = new_pose
 

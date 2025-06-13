@@ -55,6 +55,9 @@ PYBIND11_MODULE(kiss_icp_pybind, m) {
     internal_map
         .def(py::init<double, double, int>(), "voxel_size"_a, "max_distance"_a,
              "max_points_per_voxel"_a)
+        .def(py::init<const std::string&, double, double, unsigned int>(), "map_path"_a,
+            "voxel_size"_a, "max_distance"_a, "max_points_per_voxel"_a)
+
         .def("_clear", &VoxelHashMap::Clear)
         .def("_empty", &VoxelHashMap::Empty)
         .def("_update",

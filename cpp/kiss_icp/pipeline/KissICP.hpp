@@ -60,12 +60,20 @@ public:
 
 public:
     explicit KissICP(const KISSConfig &config)
-        : config_(config),
-          preprocessor_(config.max_range, config.min_range, config.deskew, config.max_num_threads),
-          registration_(
-              config.max_num_iterations, config.convergence_criterion, config.max_num_threads),
-          local_map_(config.voxel_size, config.max_range, config.max_points_per_voxel),
-          adaptive_threshold_(config.initial_threshold, config.min_motion_th, config.max_range) {}
+    :   config_(config),
+        preprocessor_(config.max_range, config.min_range, config.deskew, config.max_num_threads),
+        registration_(config.max_num_iterations, config.convergence_criterion, config.max_num_threads),
+        local_map_(config.voxel_size, config.max_range, config.max_points_per_voxel),
+        adaptive_threshold_(config.initial_threshold, config.min_motion_th, config.max_range),
+        updateMap(true) {}
+    
+    KissICP(const KISSConfig &config, const std::string &map_path)
+    :   config_(config),
+        preprocessor_(config.max_range, config.min_range, config.deskew, config.max_num_threads),
+        registration_(config.max_num_iterations, config.convergence_criterion, config.max_num_threads),
+        local_map_(map_path, config.voxel_size, config.max_range, config.max_points_per_voxel),
+        adaptive_threshold_(config.initial_threshold, config.min_motion_th, config.max_range),
+        updateMap(false) {}
 
 public:
     Vector3dVectorTuple RegisterFrame(const std::vector<Eigen::Vector3d> &frame,
@@ -93,6 +101,7 @@ private:
     Registration registration_;
     VoxelHashMap local_map_;
     AdaptiveThreshold adaptive_threshold_;
+    bool updateMap;
 };
 
 }  // namespace kiss_icp::pipeline

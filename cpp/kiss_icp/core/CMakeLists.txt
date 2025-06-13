@@ -20,7 +20,17 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+# Find Open3D
+find_package(Open3D REQUIRED CONFIG)
+
+if (Open3D_FOUND)
+    message(STATUS "Open3D found. Version: ${Open3D_VERSION}")
+else()
+    message(FATAL_ERROR "Open3D not found. Please install Open3D or set Open3D_DIR.")
+endif()
+
 add_library(kiss_icp_core STATIC)
 target_sources(kiss_icp_core PRIVATE Registration.cpp VoxelHashMap.cpp VoxelUtils.cpp Preprocessing.cpp Threshold.cpp)
-target_link_libraries(kiss_icp_core PUBLIC Eigen3::Eigen tsl::robin_map TBB::tbb Sophus::Sophus)
+target_link_libraries(kiss_icp_core PUBLIC Eigen3::Eigen tsl::robin_map TBB::tbb Sophus::Sophus Open3D::Open3D)
 set_global_target_properties(kiss_icp_core)

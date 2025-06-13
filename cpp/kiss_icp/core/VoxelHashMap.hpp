@@ -34,12 +34,30 @@
 
 #include "VoxelUtils.hpp"
 
+// ADDED Open3D INCLUDES
+#include <open3d/io/PointCloudIO.h>
+#include <open3d/geometry/PointCloud.h>
+
 namespace kiss_icp {
 struct VoxelHashMap {
     explicit VoxelHashMap(double voxel_size, double max_distance, unsigned int max_points_per_voxel)
         : voxel_size_(voxel_size),
           max_distance_(max_distance),
           max_points_per_voxel_(max_points_per_voxel) {}
+
+    VoxelHashMap(const std::string &map_path, double voxel_size, double max_distance, unsigned int max_points_per_voxel)
+      : voxel_size_(voxel_size), max_distance_(max_distance), max_points_per_voxel_(max_points_per_voxel) {
+        // --- MODIFIED: Use Open3D to load the point cloud ---
+        auto cloud_open3d = std::make_shared<open3d::geometry::PointCloud>();
+        if (!open3d::io::ReadPointCloud(map_path, *cloud_open3d)) {
+            throw std::runtime_error("Failed to load point cloud file with Open3D: " + map_path);
+        }
+
+        // Open3D's PointCloud::points_ is already a std::vector<Eigen::Vector3d>,
+        // which matches what AddPoints expects, so no manual conversion loop is needed.
+        AddPoints(cloud_open3d->points_);
+        // --- END MODIFIED ---
+      }
 
     inline void Clear() { map_.clear(); }
     inline bool Empty() const { return map_.empty(); }

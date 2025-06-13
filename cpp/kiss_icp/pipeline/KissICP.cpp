@@ -58,7 +58,7 @@ KissICP::Vector3dVectorTuple KissICP::RegisterFrame(const std::vector<Eigen::Vec
 
     // Update step: threshold, local map, delta, and the last pose
     adaptive_threshold_.UpdateModelDeviation(model_deviation);
-    local_map_.Update(frame_downsample, new_pose);
+    if (updateMap) local_map_.Update(frame_downsample, new_pose);
     last_delta_ = last_pose_.inverse() * new_pose;
     last_pose_ = new_pose;
 
