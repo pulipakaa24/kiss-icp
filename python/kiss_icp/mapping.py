@@ -35,8 +35,8 @@ def get_voxel_hash_map(config: KISSConfig, map_path: str = None):
 
 
 class VoxelHashMap:
-    def __init__(self, voxel_size: float, max_distance: float, max_points_per_voxel: int, map_path: str = None):
-      if map_path is None:
+    def __init__(self, voxel_size: float, max_distance: float, max_points_per_voxel: int, map_path: str = ""):
+      if map_path == "":
         self._internal_map = kiss_icp_pybind._VoxelHashMap(
             voxel_size=voxel_size,
             max_distance=max_distance,
