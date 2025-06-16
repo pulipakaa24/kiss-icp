@@ -25,7 +25,7 @@ import numpy as np
 from kiss_icp.config import KISSConfig
 from kiss_icp.pybind import kiss_icp_pybind
 
-def get_voxel_hash_map(config: KISSConfig, map_path: str = None):
+def get_voxel_hash_map(config: KISSConfig, map_path: str = ""):
   return VoxelHashMap(
       map_path=map_path,
       voxel_size=config.mapping.voxel_size,
