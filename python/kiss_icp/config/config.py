@@ -44,5 +44,5 @@ class RegistrationConfig(BaseModel):
 
 class AdaptiveThresholdConfig(BaseModel):
     fixed_threshold: Optional[float] = None
-    initial_threshold: float = 5.0
+    initial_threshold: float = 2.0
     min_motion_th: float = 0.1
